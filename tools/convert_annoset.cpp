@@ -89,7 +89,7 @@ int main(int argc, char** argv) {
   const string encode_type = FLAGS_encode_type;
   const string anno_type = FLAGS_anno_type;
   AnnotatedDatum_AnnotationType type;
-  const string label_type = FLAGS_label_type;
+  //const string label_type = FLAGS_label_type;
   const string label_map_file = FLAGS_label_map_file;
   const bool check_label = FLAGS_check_label;
   std::map<std::string, int> name_to_label;
@@ -143,6 +143,7 @@ int main(int argc, char** argv) {
   bool data_size_initialized = false;
 
   for (int line_id = 0; line_id < lines.size(); ++line_id) {
+    LOG(INFO) << "Processed " << line_id << " images.";
     bool status = true;
     std::string enc = encode_type;
     if (encoded && !enc.size()) {
@@ -161,6 +162,7 @@ int main(int argc, char** argv) {
           min_dim, max_dim, is_color, enc, datum);
     } else if (anno_type == "detection") {
       labelname = root_folder + boost::get<std::string>(lines[line_id].second);
+      std::string label_type = labelname.substr(labelname.find_first_of('.') + 1);
       status = ReadRichImageToAnnotatedDatum(filename, labelname, resize_height,
           resize_width, min_dim, max_dim, is_color, enc, type, label_type,
           name_to_label, &anno_datum);
