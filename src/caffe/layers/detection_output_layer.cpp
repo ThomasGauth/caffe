@@ -62,9 +62,9 @@ void DetectionOutputLayer<Dtype>::LayerSetUp(const vector<Blob<Dtype>*>& bottom,
       LabelMap label_map;
       CHECK(ReadProtoFromTextFile(label_map_file, &label_map))
           << "Failed to read label map file: " << label_map_file;
-      CHECK(MapLabelToName(label_map, true, &label_to_name_))
+      CHECK(MapLabelToName(label_map, false, &label_to_name_))
           << "Failed to convert label to name.";
-      CHECK(MapLabelToDisplayName(label_map, true, &label_to_display_name_))
+      CHECK(MapLabelToDisplayName(label_map, false, &label_to_display_name_))
           << "Failed to convert label to display name.";
     }
   } else {
