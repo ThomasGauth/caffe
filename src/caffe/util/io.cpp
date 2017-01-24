@@ -289,7 +289,10 @@ bool ReadXMLToAnnotatedDatum(const string& labelfile, const int img_height,
         if (v2.first == "name") {
           string name = pt2.data();
           if (name_to_label.find(name) == name_to_label.end()) {
-            LOG(FATAL) << "Unknown name: " << name;
+            //LOG(FATAL) << "Unknown name: " << name;
+            //if the annotation file contains an object which is not described in the label map
+            //ignore it
+            break;
           }
           int label = name_to_label.find(name)->second;
           bool found_group = false;
@@ -322,7 +325,7 @@ bool ReadXMLToAnnotatedDatum(const string& labelfile, const int img_height,
           int ymin = pt2.get("ymin", 0);
           int xmax = pt2.get("xmax", 0);
           int ymax = pt2.get("ymax", 0);
-          CHECK_NOTNULL(anno);
+          //CHECK_NOTNULL(anno);
           LOG_IF(WARNING, xmin > width) << labelfile <<
               " bounding box exceeds image boundary.";
           LOG_IF(WARNING, ymin > height) << labelfile <<
@@ -350,6 +353,7 @@ bool ReadXMLToAnnotatedDatum(const string& labelfile, const int img_height,
           bbox->set_xmax(static_cast<float>(xmax) / width);
           bbox->set_ymax(static_cast<float>(ymax) / height);
           bbox->set_difficult(difficult);
+          CHECK_NOTNULL(anno);
         }
       }
     }
@@ -390,7 +394,10 @@ bool ReadJSONToAnnotatedDatum(const string& labelfile, const int img_height,
     // Get category_id.
     string name = object.get<string>("category_id");
     if (name_to_label.find(name) == name_to_label.end()) {
-      LOG(FATAL) << "Unknown name: " << name;
+      //LOG(FATAL) << "Unknown name: " << name;
+      //if the annotation file contains an object which is not described in the label map
+      //ignore it
+      continue;
     }
     int label = name_to_label.find(name)->second;
     bool found_group = false;
